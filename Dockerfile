@@ -1,14 +1,14 @@
 FROM java:8
 
-ENV ZOOKEEPER_VERSION=3.4.5
+ENV ZOOKEEPER_VERSION=3.4.8
 
 ENV ZOOKEEPER_ARCHIVE=zookeeper-${ZOOKEEPER_VERSION}.tar.gz
 ENV ZOOKEEPER_ARCHIVE_ASC=${ZOOKEEPER_ARCHIVE}.asc
 
 ENV ZOOKEEPER_WORKDIR=/opt/zookeeper-${ZOOKEEPER_VERSION}
 
-ADD https://archive.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/${ZOOKEEPER_ARCHIVE} /tmp/
-ADD https://archive.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/${ZOOKEEPER_ARCHIVE_ASC} /tmp/
+ADD https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/${ZOOKEEPER_ARCHIVE} /tmp/
+ADD https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/${ZOOKEEPER_ARCHIVE_ASC} /tmp/
 
 ADD https://www.apache.org/dist/zookeeper/KEYS /tmp/developers.gpg
 
