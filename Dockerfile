@@ -2,26 +2,22 @@ FROM java:8
 
 ENV ZOOKEEPER_VERSION=3.4.8
 
-ENV ZOOKEEPER_ARCHIVE=zookeeper-${ZOOKEEPER_VERSION}.tar.gz
-ENV ZOOKEEPER_ARCHIVE_ASC=${ZOOKEEPER_ARCHIVE}.asc
-
-ENV ZOOKEEPER_WORKDIR=/opt/zookeeper-${ZOOKEEPER_VERSION}
-
-RUN wget https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/${ZOOKEEPER_ARCHIVE} -O /tmp/${ZOOKEEPER_ARCHIVE} && \
-    wget https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/${ZOOKEEPER_ARCHIVE_ASC} -O /tmp/${ZOOKEEPER_ARCHIVE_ASC} && \
+RUN wget https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz -O /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+    wget https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc -O /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc && \
     wget https://www.apache.org/dist/zookeeper/KEYS -O /tmp/developers.gpg && \
     gpg --no-default-keyring --keyring zookeeper --import /tmp/developers.gpg && \
-    gpgv --keyring zookeeper /tmp/$ZOOKEEPER_ARCHIVE_ASC /tmp/$ZOOKEEPER_ARCHIVE && \
-    tar -zx -C /opt -f /tmp/$ZOOKEEPER_ARCHIVE && \
-    rm /tmp/$ZOOKEEPER_ARCHIVE /tmp/$ZOOKEEPER_ARCHIVE_ASC /tmp/developers.gpg && \
-    useradd -d $(echo $ZOOKEEPER_WORKDIR) -s /bin/false zookeeper && \
-    chown -R zookeeper $(echo $ZOOKEEPER_WORKDIR) && \
+    gpgv --keyring zookeeper /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+    tar -zx -C /opt -f /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+    ln -s $(echo /opt/zookeeper-${ZOOKEEPER_VERSION}) /opt/zookeeper && \
+    rm /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz /tmp/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc /tmp/developers.gpg && \
+    useradd -d $(echo /opt/zookeeper-${ZOOKEEPER_VERSION}) -s /bin/false zookeeper && \
+    chown -R zookeeper $(echo /opt/zookeeper-${ZOOKEEPER_VERSION}) && \
     mkdir /var/lib/zookeeper && \
     chown zookeeper /var/lib/zookeeper
 
 USER zookeeper
 ADD zookeeper-entrypoint.sh /
-WORKDIR ${ZOOKEEPER_WORKDIR}
+WORKDIR /opt/zookeeper-${ZOOKEEPER_VERSION}
 
 EXPOSE 2181
 VOLUME ["/var/lib/zookeeper"]

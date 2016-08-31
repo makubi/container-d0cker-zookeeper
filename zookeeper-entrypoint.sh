@@ -2,6 +2,8 @@
 
 set -e
 
+ZOOKEEPER_WORKDIR="/opt/zookeeper"
+
 if [ -z "$TICK_TIME" ] || [ -z "$CLIENT_PORT" ]; then
 	echo "Please set TICK_TIME and CLIENT_PORT env"
 	exit 1
